@@ -100,7 +100,6 @@ setup-aws:
 
 install: # Install software bundles
 	source ./.bash_profile && ( $(MAKE) install_inner || true )
-	@bin/fig cleanup
 	rm -f /home/linuxbrew/.linuxbrew/bin/perl
 
 install_inner:
@@ -114,10 +113,8 @@ python:
 	if test -w /usr/local/bin; then ln -nfs python3 /usr/local/bin/python; fi
 	if test -w /home/linuxbrew/.linuxbrew/bin; then ln -nfs python3 /home/linuxbrew/.linuxbrew/bin/python; fi
 	if ! venv/bin/python --version 2>/dev/null; then \
-		rm -rf venv; bin/fig python; ./env.sh python -m venv venv && venv/bin/python -m pip install --upgrade pip pip-tools pipx; fi
 
 pipx:
-	@bin/fig pipx
 	if ! test -x venv/bin/pipx; then \
 		./env.sh venv/bin/python -m pip install --upgrade pip pip-tools pipx; fi
 	-bin/runmany 'venv/bin/python -m pipx install $$1' cookiecutter pre-commit yq keepercommander black pylint flake8 isort pyinfra solo-python awscli flit
@@ -126,37 +123,32 @@ pipx:
 	-venv/bin/python -m pipx install --pip-args "pytest" testinfra
 
 brew:
-	-if test -x "$(shell which brew)"; then bin/fig brew; brew bundle; fi
+	-if test -x "$(shell which brew)"; then brew bundle; fi
 
 misc:
-	@bin/fig misc
 	~/env.sh $(MAKE) /usr/local/bin/pinentry-defn
 	~/env.sh $(MAKE) .config/kustomize/plugin/goabout.com/v1beta1/sopssecretgenerator/SopsSecretGenerator
 	~/env.sh $(MAKE) bin/docker-credential-pass
 	~/env.sh $(MAKE) /usr/local/bin/pass-vault-helper
 
 .config/kustomize/plugin/goabout.com/v1beta1/sopssecretgenerator/SopsSecretGenerator:
-	@bin/fig sops
 	mkdir -p .config/kustomize/plugin/goabout.com/v1beta1/sopssecretgenerator
 	curl -o .config/kustomize/plugin/goabout.com/v1beta1/sopssecretgenerator/SopsSecretGenerator -sSL https://github.com/goabout/kustomize-sopssecretgenerator/releases/download/v1.3.2/SopsSecretGenerator_1.3.2_$(shell uname -s | tr '[:upper:]' '[:lower:]')_amd64
 	-chmod 755 .config/kustomize/plugin/goabout.com/v1beta1/sopssecretgenerator/SopsSecretGenerator
 
 /usr/local/bin/pinentry-defn:
-	@bin/fig pinentry
 	if [[ -w /usr/local/bin ]]; then \
 		ln -nfs "$(HOME)/bin/pinentry-defn" /usr/local/bin/pinentry-defn; \
 	else \
 		sudo ln -nfs "$(HOME)/bin/pinentry-defn" /usr/local/bin/pinentry-defn; fi
 
 bin/docker-credential-pass:
-	@bin/fig pass-docker
 	rm -f go.mod
 	go mod init github.com/amanibhavam/homedir
 	go get github.com/jojomomojo/docker-credential-helpers/pass/cmd@v0.6.5
 	go build -o bin/docker-credential-pass github.com/jojomomojo/docker-credential-helpers/pass/cmd
 
 /usr/local/bin/pass-vault-helper:
-	@bin/fig pass-vault
 	if [[ -w /usr/local/bin ]]; then \
 		ln -nfs "$(HOME)/bin/pass-vault-helper" /usr/local/bin/pass-vault-helper; \
 	else \
