@@ -1,5 +1,3 @@
-tap "tilt-dev/tap"
-
 brew "chamber"
 brew "gnupg"
 brew "git"
@@ -26,13 +24,13 @@ brew "gron"
 brew "step"
 brew "direnv"
 brew "rg"
-brew "tilt"
 
 if OS.mac?
   tap "homebrew/cask"
   tap "homebrew/cask-fonts"
   tap "cloudflare/cloudflare"
   tap "aws/tap"
+  tap "tilt-dev/tap"
 
   cask "aws-vault"
   cask "1password"
@@ -55,6 +53,7 @@ if OS.mac?
   cask "snagit"
   cask "dbeaver-community"
 
+  brew "tilt"
   brew "htop"
   brew "pinentry-mac"
   brew "terminal-notifier"
