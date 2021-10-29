@@ -18,11 +18,13 @@ RUN ./env.sh brew bundle
 
 RUN make upgrade
 
-RUN make install
+RUN make install-brew
 
 RUN make install-asdf
 
 RUN make shim
+
+RUN make install-misc
 
 USER root
 COPY service /service

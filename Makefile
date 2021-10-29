@@ -98,16 +98,13 @@ setup-do-inner:
 setup-aws:
 	sudo perl -pe 's{^#\s*GatewayPorts .*}{GatewayPorts yes}' /etc/ssh/sshd_config | grep Gateway
 
-install: # Install software bundles
-	source ./.bash_profile && ( $(MAKE) install_inner || true )
+install-brew: # Install software bundles
+	-if test -x "$(shell which brew)"; then brew bundle; fi
 	rm -f /home/linuxbrew/.linuxbrew/bin/perl
 
 install_inner:
-	$(MAKE) brew
-	$(MAKE) asdf
 	$(MAKE) python
 	$(MAKE) pipx
-	$(MAKE) misc
 
 python:
 	if test -w /usr/local/bin; then ln -nfs python3 /usr/local/bin/python; fi
@@ -122,10 +119,7 @@ pipx:
 	-venv/bin/python -m pipx install --pip-args "tox-docker" tox
 	-venv/bin/python -m pipx install --pip-args "pytest" testinfra
 
-brew:
-	-if test -x "$(shell which brew)"; then brew bundle; fi
-
-misc:
+install-misc:
 	~/env.sh $(MAKE) /usr/local/bin/pinentry-defn
 	~/env.sh $(MAKE) .config/kustomize/plugin/goabout.com/v1beta1/sopssecretgenerator/SopsSecretGenerator
 	~/env.sh $(MAKE) bin/docker-credential-pass
