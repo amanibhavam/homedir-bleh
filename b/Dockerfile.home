@@ -12,28 +12,23 @@ WORKDIR /home/app
 ENV HOME=/home/app
 ENV PATH=/home/app/.asdf/bin:/home/app/.asdf/shims:/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN brew upgrade
-
 RUN git clone $HOMEDIR homedir && mv homedir/.git . && rm -rf homedir && git reset --hard && make update
 
-RUN ./env.sh brew bundle || true
+RUN ./env.sh brew bundle
 
-RUN make update || make update
-
-RUN make update || make update
-
-RUN make install-asdf
-
-RUN git checkout .
+RUN make upgrade
 
 RUN make install
 
-RUN (make update || make update) && (make upgrade || make upgrade) && make install
+RUN make install-asdf
+
 RUN make shim
 
-COPY service /service
 USER root
+COPY service /service
 RUN chmod 755 /service
-USER app
+
 ENTRYPOINT [ "/service" ]
 CMD [ "sshd" ]
+
+USER app
