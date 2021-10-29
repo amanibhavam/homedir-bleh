@@ -85,6 +85,8 @@ spec:
           - "--destination={{inputs.parameters.destination}}"
           - "--build-arg"
           - "IMAGE={{inputs.parameters.source}}"
+          - "--build-arg"
+          - "HOMEDIR={{inputs.parameters.repo}}"
           - "--reproducible"
           - "--cache"
           - "--cache-copy-layers"
