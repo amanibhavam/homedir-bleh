@@ -27,4 +27,8 @@ RUN env HOMEBREW_NO_AUTO_UPDATE=1 brew tap linuxbrew/xorg
 
 RUN env HOMEBREW_NO_AUTO_UPDATE=1 brew install perl
 
+USER root
+RUN ln -nfs /home/linuxbrew/.linuxbrew/bin/gpg* /home/linuxbrew/.linuxbrew/bin/tmux /usr/local/bin/
+
+USER app
 ENV PATH=/home/app/.asdf/bin:/home/app/.asdf/shims:/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

@@ -238,19 +238,6 @@ rebuild: # Rebuild everything from scratch
 scratch: # Rebuild everything from scratch without cache
 	$(MAKE) build=--no-cache
 
-home: b/.tool-versions
-	date > b/index-homedir
-	$(MAKE) build--home push--home
-
-home-update:
-	$(MAKE) build--update build=--no-cache push--home 
-	date > k/.index
-	sleep 10
-	$(MAKE) tilt-sync
-
-b/.tool-versions: .password-store/.tool-versions
-	rsync -ia .password-store/.tool-versions $@
-
 push--%:
 	docker push k3d-hub.defn.ooo:5000/defn/home:$(second)
 

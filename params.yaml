@@ -10,3 +10,7 @@ base_destination: "k3d-hub.defn.ooo:5000/amanibhavam/homedir:base"
 brew_dockerfile: b/Dockerfile.brew
 brew_source: "k3d-hub.defn.ooo:5000/amanibhavam/homedir:base"
 brew_destination: "k3d-hub.defn.ooo:5000/amanibhavam/homedir:brew"
+
+home_dockerfile: b/Dockerfile.home
+home_source: "k3d-hub.defn.ooo:5000/amanibhavam/homedir:brew"
+home_destination: "k3d-hub.defn.ooo:5000/amanibhavam/homedir:home"
