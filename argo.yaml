@@ -29,6 +29,22 @@ spec:
                   value: "{{workflow.parameters.base_destination}}{{workflow.parameters.variant}}-{{workflow.parameters.version}}"
                 - name: dockerfile
                   value: "{{workflow.parameters.base_dockerfile}}"
+    - name: build-brew
+      steps:
+        - - name: build-brew
+            template: kaniko-build
+            arguments:
+              parameters:
+                - name: repo
+                  value: "{{workflow.parameters.repo}}"
+                - name: revision
+                  value: "{{workflow.parameters.revision}}"
+                - name: source
+                  value: "{{workflow.parameters.brew_source}}{{workflow.parameters.variant}}-{{workflow.parameters.version}}"
+                - name: destination
+                  value: "{{workflow.parameters.brew_destination}}{{workflow.parameters.variant}}-{{workflow.parameters.version}}"
+                - name: dockerfile
+                  value: "{{workflow.parameters.brew_dockerfile}}"
     - name: kaniko-build
       inputs:
         parameters:
