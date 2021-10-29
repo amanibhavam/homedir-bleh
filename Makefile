@@ -161,47 +161,6 @@ new:
 	sudo mkdir -p /usr/local/bin
 	sudo ln -nfs /home/linuxbrew/.linuxbrew/bin/git-crypt /usr/local/bin/
 
-bash:
-	cd c && docker-compose exec home bash -il
-
-sync:
-	cp -a .docker/config.json k/.sync/.docker/
-	cp -a .ssh/authorized_keys .ssh/known_hosts k/.sync/.ssh/
-
-tilt-sync:
-	cp ~/.password-store/.gpg-id k/.sync/.aws-vault/
-	cp -a .docker/config.json k/.sync/.docker/
-	cp -a .ssh/authorized_keys .ssh/known_hosts k/.sync/.ssh/
-	rsync -ia .password-store k/.sync/ >/dev/null
-	find k/.sync/.password-store ! -type d | xargs touch
-	find k/.sync/.kube ! -type d | xargs touch
-	find k/.sync/.aws-vault ! -type d | xargs touch
-
-tilt:
-	date > k/.index
-	tilt up --namespace defn
-
-up:
-	cd c && docker-compose up -d --remove-orphans
-
-down:
-	cd c && docker-compose down --remove-orphans
-
-recreate:
-	$(MAKE) down
-	$(MAKE) reset
-	$(MAKE) up
-
-reset:
-	-ssh-keygen -R '[localhost]:2222'
-
-recycle:
-	$(MAKE) pull
-	$(MAKE) recreate
-
-tail:
-	cd c && docker-compose logs -f
-
 shim:
 	ln -nfs "$(shell asdf which kubectl)" bin/site/
 	ln -nfs "$(shell asdf which kustomize)" bin/site/
@@ -215,23 +174,6 @@ shim:
 	ln -nfs "$(shell asdf which kubens)" bin/site/
 	ln -nfs "$(shell asdf which k9s)" bin/site/
 
-rebuild: # Rebuild everything from scratch
-	$(MAKE) build--base build=$(build)
-	$(MAKE) build--brew build=$(build)
-	$(MAKE) build--home build=$(build)
-
-scratch: # Rebuild everything from scratch without cache
-	$(MAKE) build=--no-cache
-
-push--%:
-	docker push k3d-hub.defn.ooo:5000/defn/home:$(second)
-
-build--%:
-	docker build $(build) -t k3d-hub.defn.ooo:5000/defn/home:$(second) \
-		--build-arg HOMEDIR=https://github.com/amanibhavam/homedir \
-		-f b/Dockerfile.$(second) \
-		b
-
 thing:
 	-$(MAKE) update
 	$(MAKE) update
@@ -239,14 +181,6 @@ thing:
 	$(MAKE) upgrade
 	$(MAKE) install
 	$(MAKE) install-coc
-
-submit:
-	$(MAKE) submit_base
-	$(MAKE) submit_{app,ci}
-	$(MAKE) submit_{aws,terraform,cdktf}
-
-submit_%:
-	argo submit --log -f params.yaml --entrypoint build-$(second_) argo.yaml
 
 install-vim:
 	mkdir -p .vim/autoload .vim/bundle
