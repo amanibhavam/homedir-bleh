@@ -1,4 +1,6 @@
-FROM k3d-hub.defn.ooo:5000/defn/home:base
+ARG IMAGE
+
+FROM $IMAGE
 
 USER root
 
@@ -6,13 +8,9 @@ ENV HOME=/root
 ENV DEBIAN_FRONTEND=noninteractive
 ENV container docker
 
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends libudev-dev
-
 RUN install -d -o app -g app -d /home/linuxbrew
-RUN install -d -o app -g app -d /home/app
-RUN usermod -d /home/app app
+
+RUN ln -nfs locale.h /usr/include/xlocale.h
 
 USER app
 WORKDIR /home/app
@@ -27,13 +25,6 @@ RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.s
 
 RUN env HOMEBREW_NO_AUTO_UPDATE=1 brew tap linuxbrew/xorg
 
-USER root
-RUN ln -nfs locale.h /usr/include/xlocale.h
-
-USER app
-
 RUN env HOMEBREW_NO_AUTO_UPDATE=1 brew install perl
-
-RUN env HOMEBREW_NO_AUTO_UPDATE=1 brew install figlet lolcat
 
 ENV PATH=/home/app/.asdf/bin:/home/app/.asdf/shims:/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

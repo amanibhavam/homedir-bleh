@@ -4,9 +4,8 @@ FROM $IMAGE
 
 USER root
 
-ARG DEBIAN_FRONTEND=noninteractive
-
 ENV HOME=/root
+ENV DEBIAN_FRONTEND=noninteractive
 ENV container docker
 
 RUN dpkg-divert --local --rename --add /sbin/udevadm && ln -s /bin/true /sbin/udevadm
@@ -21,6 +20,7 @@ RUN apt-get update \
         libssl-dev zlib1g-dev libbz2-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev libreadline-dev \
         tmux gnupg libusb-1.0-0 \
         zbar-tools htop \
+        libudev-dev \
     && rm -f /usr/bin/gs
 
 RUN echo "app ALL=(ALL:ALL) ALL" >> /etc/sudoers

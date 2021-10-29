@@ -8,6 +8,7 @@ work
 .password-store*
 .SpaceVim.d/
 .vim/.netrwhist
+.vim/bundle
 .ssh
 .dotfiles-repo
 .gnupg/S.gpg-agent
