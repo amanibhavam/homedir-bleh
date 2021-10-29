@@ -87,9 +87,6 @@ spec:
           - "IMAGE={{inputs.parameters.source}}"
           - "--build-arg"
           - "HOMEDIR={{inputs.parameters.repo}}"
-          - "--reproducible"
-          - "--cache"
-          - "--cache-copy-layers"
           - "--insecure"
           - "{{inputs.parameters.insecure_pull}}"
   securityContext:
